@@ -4,7 +4,6 @@ const {Schema} = mongoose
 
 
 const userSchema = new Schema({
-    _id: Schema.Types.ObjectId,
     email: {
         type: String,
         unique: true,
