@@ -11,7 +11,7 @@ router.post('/login', (req, res) => {
 
     User.isAuthenticUser(email, password)
     .then(auth => {
-        console.log(auth)
+        // console.log(auth)
         if(auth) {
             const [,,,ip_address] = req.ip.split(":")
 
@@ -28,14 +28,15 @@ router.post('/login', (req, res) => {
                     throw new Error('Bad token')
                 }
 
-                res.set('Authorization', `Bearer ${token}`)
+                // res.set('Authorization', `Bearer ${token}`)
                 // add cookie to response
                 const cookies = new Cookies(req, res)
-
                 cookies.set('access_token', token, {
                     secure: false,
                     httpOnly: true
                 })
+                // console.log(cookies)
+
                 res.status(200).json({
                     message: 'you logged in',
                 }) 
