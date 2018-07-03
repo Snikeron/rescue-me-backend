@@ -7,11 +7,10 @@ const authRouter = require('./auth/authRouter')
 const app = express()
 
 app.use(bodyParser.json())
-app.use(cors())
 
 const corsOptions = {
     exposedHeaders: "Authorization",
-    // withCredentials: true
+    withCredentials: true
 }
 app.use(cors(corsOptions))
 

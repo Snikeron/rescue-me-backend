@@ -11,7 +11,6 @@ router.post('/login', (req, res) => {
 
     User.isAuthenticUser(email, password)
     .then(auth => {
-    
         console.log(auth)
         if(auth) {
             const [,,,ip_address] = req.ip.split(":")
@@ -20,22 +19,29 @@ router.post('/login', (req, res) => {
                 email,
                 ip_address
             }
-            console.log(payload)
-            const JWT_SECRET = process.env.JWT_SECRET
+
+            const jwtSecret = process.env.JWT_SECRET
             
-            const token = JWT.sign(payload, JWT_SECRET)
+            const header = JWT.sign(payload, jwtSecret, (err, token) => {
+                if(err) {
+                    res.status(401)
+                    throw new Error('Bad token')
+                }
 
-            // add cookie to response
-            const cookies = new Cookies(req, res)
+                res.set('Authorization', `Bearer ${token}`)
+                // add cookie to response
+                const cookies = new Cookies(req, res)
 
-            cookies.set('access_token', token, {
-                secure: false,
-                httpOnly: true
+                cookies.set('access_token', token, {
+                    secure: false,
+                    httpOnly: true
+                })
+                res.status(200).json({
+                    message: 'you logged in',
+                }) 
             })
-            
-            res.status(200).json({
-                message: 'you logged in',
-            }) 
+        
+            return header;    
 
         } else {
             res.status(500)
